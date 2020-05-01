@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DD265225245C4547007BD550 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265224245C4547007BD550 /* PhotoAlbumViewController.swift */; };
+		DD265227245C45D5007BD550 /* TravelMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265226245C45D5007BD550 /* TravelMapViewController.swift */; };
+		DD265229245C4F27007BD550 /* FlickerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265228245C4F27007BD550 /* FlickerClient.swift */; };
 		DD4AF1012458DBE400F831DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1002458DBE400F831DE /* AppDelegate.swift */; };
 		DD4AF1032458DBE400F831DE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1022458DBE400F831DE /* SceneDelegate.swift */; };
-		DD4AF1052458DBE400F831DE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1042458DBE400F831DE /* ViewController.swift */; };
 		DD4AF1082458DBE400F831DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD4AF1062458DBE400F831DE /* Main.storyboard */; };
 		DD4AF10B2458DBE400F831DE /* Virtual_Tourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1092458DBE400F831DE /* Virtual_Tourist.xcdatamodeld */; };
 		DD4AF10D2458DBE500F831DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD4AF10C2458DBE500F831DE /* Assets.xcassets */; };
@@ -17,10 +19,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DD265224245C4547007BD550 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
+		DD265226245C45D5007BD550 /* TravelMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelMapViewController.swift; sourceTree = "<group>"; };
+		DD265228245C4F27007BD550 /* FlickerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickerClient.swift; sourceTree = "<group>"; };
 		DD4AF0FD2458DBE400F831DE /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4AF1002458DBE400F831DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD4AF1022458DBE400F831DE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DD4AF1042458DBE400F831DE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DD4AF1072458DBE400F831DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DD4AF10A2458DBE400F831DE /* Virtual_Tourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Virtual_Tourist.xcdatamodel; sourceTree = "<group>"; };
 		DD4AF10C2458DBE500F831DE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -58,16 +62,74 @@
 		DD4AF0FF2458DBE400F831DE /* Virtual Tourist */ = {
 			isa = PBXGroup;
 			children = (
+				DD4AF11D2458F12E00F831DE /* Assets */,
+				DD4AF1192458F02200F831DE /* Controller */,
+				DD4AF1182458F01A00F831DE /* View */,
+				DD4AF1172458F00C00F831DE /* Model */,
 				DD4AF1002458DBE400F831DE /* AppDelegate.swift */,
 				DD4AF1022458DBE400F831DE /* SceneDelegate.swift */,
-				DD4AF1042458DBE400F831DE /* ViewController.swift */,
-				DD4AF1062458DBE400F831DE /* Main.storyboard */,
-				DD4AF10C2458DBE500F831DE /* Assets.xcassets */,
-				DD4AF10E2458DBE500F831DE /* LaunchScreen.storyboard */,
 				DD4AF1112458DBE500F831DE /* Info.plist */,
 				DD4AF1092458DBE400F831DE /* Virtual_Tourist.xcdatamodeld */,
 			);
 			path = "Virtual Tourist";
+			sourceTree = "<group>";
+		};
+		DD4AF1172458F00C00F831DE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DD4AF11B2458F0A300F831DE /* Request */,
+				DD4AF11A2458F06900F831DE /* Core */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DD4AF1182458F01A00F831DE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				DD4AF11C2458F10A00F831DE /* Storyboards */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		DD4AF1192458F02200F831DE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DD265224245C4547007BD550 /* PhotoAlbumViewController.swift */,
+				DD265226245C45D5007BD550 /* TravelMapViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		DD4AF11A2458F06900F831DE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		DD4AF11B2458F0A300F831DE /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				DD265228245C4F27007BD550 /* FlickerClient.swift */,
+			);
+			path = Request;
+			sourceTree = "<group>";
+		};
+		DD4AF11C2458F10A00F831DE /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				DD4AF10E2458DBE500F831DE /* LaunchScreen.storyboard */,
+				DD4AF1062458DBE400F831DE /* Main.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		DD4AF11D2458F12E00F831DE /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				DD4AF10C2458DBE500F831DE /* Assets.xcassets */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,9 +203,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD265227245C45D5007BD550 /* TravelMapViewController.swift in Sources */,
+				DD265229245C4F27007BD550 /* FlickerClient.swift in Sources */,
 				DD4AF10B2458DBE400F831DE /* Virtual_Tourist.xcdatamodeld in Sources */,
-				DD4AF1052458DBE400F831DE /* ViewController.swift in Sources */,
 				DD4AF1012458DBE400F831DE /* AppDelegate.swift in Sources */,
+				DD265225245C4547007BD550 /* PhotoAlbumViewController.swift in Sources */,
 				DD4AF1032458DBE400F831DE /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
