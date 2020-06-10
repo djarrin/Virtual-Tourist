@@ -8,20 +8,39 @@
 
 import UIKit
 import MapKit
+import CoreData
 
 class TravelAnnotation: MKPointAnnotation {
     //Will use this ID once we get to the saving and retrieving step
     var tag: Int!
 }
 
-class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate {
+class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     
     var dataController:DataController!
     
+    var fetchedResultsController:NSFetchedResultsController<Pin>!
+    
+    fileprivate func setUpFetchedResultsController() {
+        let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "longitude", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: "pins")
+        fetchedResultsController.delegate = self
+        
+        try? fetchedResultsController.performFetch()
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        setUpFetchedResultsController()
+        
+        loadPins()
         
         let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleTap))
         tapGesture.delegate = self
@@ -29,23 +48,70 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate {
 
         mapView.delegate = self
         
-//        mapView.setCenter(CLLocationCoordinate2D(latitude: UserDefaults.standard.double(forKey: "mapLatitude"), longitude: UserDefaults.standard.double(forKey: "mapLongitude")), animated: true)
+        setMapView()
+                
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpFetchedResultsController()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        fetchedResultsController = nil
+    }
+    
+    func loadPins(){
+        if let locations = fetchedResultsController.fetchedObjects {
+            var annotations = [MKPointAnnotation]()
+                    
+            for dictionary in locations {
+                let lat = CLLocationDegrees(dictionary.latitude)
+                let long = CLLocationDegrees(dictionary.longitude)
+                
+                let cordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
+                
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = cordinate
+//                annotation.title = "\(firstName) \(lastName)"
+//                annotation.subtitle = mediaURL
+                
+                annotations.append(annotation)
+            }
+
+            mapView.addAnnotations(annotations)
+        }
+    }
+    
+    func setMapView(){
         let centerCoordinate = CLLocationCoordinate2D(latitude: UserDefaults.standard.double(forKey: "mapLatitude"), longitude: UserDefaults.standard.double(forKey: "mapLongitude"))
         let latitudeDelta = UserDefaults.standard.double(forKey: "mapLatitudeDelta")
         let longitudeDelta = UserDefaults.standard.double(forKey: "mapLongitudeDelta")
         let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
         let region = MKCoordinateRegion( center: centerCoordinate, span: span)
         mapView.setRegion(region, animated: true)
-                
     }
     
     @objc func handleTap(gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: mapView)
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        
+        savePin(coordinate: coordinate)
         let annotation = TravelAnnotation()
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
+    }
+    
+    func savePin(coordinate: CLLocationCoordinate2D) {
+        let pin = Pin(context: dataController.viewContext)
+        pin.latitude = coordinate.latitude
+        pin.longitude = coordinate.longitude
+        print(pin)
+        do {
+          try dataController.viewContext.save()
+        } catch {
+            print(error.localizedDescription)
+        }
     }
 
     
@@ -90,12 +156,5 @@ extension TravelMapViewController:MKMapViewDelegate {
                print("do something")
             }
         }
-    }
-    
-    func getRadius(centralLocation: CLLocation) -> Double{
-        let topCentralLat:Double = centralLocation.coordinate.latitude -  mapView.region.span.latitudeDelta/2
-        let topCentralLocation = CLLocation(latitude: topCentralLat, longitude: centralLocation.coordinate.longitude)
-        let radius = centralLocation.distance(from: topCentralLocation)
-        return radius / 1000.0 // to convert radius to meters
     }
 }
