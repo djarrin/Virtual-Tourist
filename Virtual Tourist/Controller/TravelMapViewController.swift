@@ -99,22 +99,24 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
     @objc func handleTap(gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: mapView)
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        savePin(coordinate: coordinate)
+        let pin = savePin(coordinate: coordinate)
         let annotation = TravelAnnotation()
         annotation.coordinate = coordinate
+        annotation.pin = pin
         mapView.addAnnotation(annotation)
     }
     
-    func savePin(coordinate: CLLocationCoordinate2D) {
+    func savePin(coordinate: CLLocationCoordinate2D) -> Pin {
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = coordinate.latitude
         pin.longitude = coordinate.longitude
-        print(pin)
         do {
           try dataController.viewContext.save()
         } catch {
             print(error.localizedDescription)
         }
+        
+        return pin
     }
 
     
@@ -139,7 +141,7 @@ extension TravelMapViewController:MKMapViewDelegate {
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true
-            pinView!.pinTintColor = .purple
+            pinView!.pinTintColor = .systemTeal
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
             pinView!.annotation = annotation

@@ -10,6 +10,7 @@
 		DD265225245C4547007BD550 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265224245C4547007BD550 /* PhotoAlbumViewController.swift */; };
 		DD265227245C45D5007BD550 /* TravelMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265226245C45D5007BD550 /* TravelMapViewController.swift */; };
 		DD265229245C4F27007BD550 /* FlickerClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD265228245C4F27007BD550 /* FlickerClient.swift */; };
+		DD27A2262493A9970084C251 /* FlickerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD27A2252493A9970084C251 /* FlickerResponse.swift */; };
 		DD4AF1012458DBE400F831DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1002458DBE400F831DE /* AppDelegate.swift */; };
 		DD4AF1032458DBE400F831DE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD4AF1022458DBE400F831DE /* SceneDelegate.swift */; };
 		DD4AF1082458DBE400F831DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD4AF1062458DBE400F831DE /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 		DD265224245C4547007BD550 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		DD265226245C45D5007BD550 /* TravelMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelMapViewController.swift; sourceTree = "<group>"; };
 		DD265228245C4F27007BD550 /* FlickerClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickerClient.swift; sourceTree = "<group>"; };
+		DD27A2252493A9970084C251 /* FlickerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickerResponse.swift; sourceTree = "<group>"; };
 		DD4AF0FD2458DBE400F831DE /* Virtual Tourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Virtual Tourist.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4AF1002458DBE400F831DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD4AF1022458DBE400F831DE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DD27A2232493A9540084C251 /* Flicker Responses */ = {
+			isa = PBXGroup;
+			children = (
+				DD27A2252493A9970084C251 /* FlickerResponse.swift */,
+			);
+			path = "Flicker Responses";
+			sourceTree = "<group>";
+		};
+		DD27A2242493A9680084C251 /* Flicker Requests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Flicker Requests";
+			sourceTree = "<group>";
+		};
 		DD4AF0F42458DBE400F831DE = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +130,8 @@
 		DD4AF11B2458F0A300F831DE /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				DD27A2242493A9680084C251 /* Flicker Requests */,
+				DD27A2232493A9540084C251 /* Flicker Responses */,
 				DD265228245C4F27007BD550 /* FlickerClient.swift */,
 			);
 			path = Request;
@@ -213,6 +232,7 @@
 				DD4AF1012458DBE400F831DE /* AppDelegate.swift in Sources */,
 				DD265225245C4547007BD550 /* PhotoAlbumViewController.swift in Sources */,
 				DD4AF1032458DBE400F831DE /* SceneDelegate.swift in Sources */,
+				DD27A2262493A9970084C251 /* FlickerResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
