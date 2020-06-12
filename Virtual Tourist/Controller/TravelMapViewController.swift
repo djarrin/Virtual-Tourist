@@ -12,7 +12,7 @@ import CoreData
 
 class TravelAnnotation: MKPointAnnotation {
     //Will use this ID once we get to the saving and retrieving step
-    var tag: Int!
+    var pin: Pin!
 }
 
 class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
@@ -37,7 +37,7 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         setUpFetchedResultsController()
         
         loadPins()
@@ -54,17 +54,19 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         setUpFetchedResultsController()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         fetchedResultsController = nil
     }
     
     func loadPins(){
         if let locations = fetchedResultsController.fetchedObjects {
-            var annotations = [MKPointAnnotation]()
+            var annotations = [TravelAnnotation]()
                     
             for dictionary in locations {
                 let lat = CLLocationDegrees(dictionary.latitude)
@@ -72,8 +74,9 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
                 
                 let cordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
                 
-                let annotation = MKPointAnnotation()
+                let annotation = TravelAnnotation()
                 annotation.coordinate = cordinate
+                annotation.pin = dictionary
 //                annotation.title = "\(firstName) \(lastName)"
 //                annotation.subtitle = mediaURL
                 
@@ -146,15 +149,9 @@ extension TravelMapViewController:MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        print("tapped on pin ")
-        print(view)
-    }
-
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if control == view.rightCalloutAccessoryView {
-            if let doSomething = view.annotation?.title! {
-               print("do something")
-            }
-        }
+        let annotation = view.annotation as? TravelAnnotation
+        let PhotoAlbumViewController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
+        PhotoAlbumViewController.pin = annotation?.pin
+        self.navigationController!.pushViewController(PhotoAlbumViewController, animated: true)
     }
 }

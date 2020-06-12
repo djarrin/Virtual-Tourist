@@ -22,10 +22,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let delegate = UIApplication.shared.delegate as! AppDelegate
-        // Create a ViewController object and set it as the scene's window's root view controller.
-        let travelMapViewController = storyboard.instantiateInitialViewController() as! TravelMapViewController
+        // Get rootViewController
+        let rootViewController = self.window?.rootViewController as! UINavigationController
+        // Get top view for root controller
+        let travelMapViewController = rootViewController.topViewController as! TravelMapViewController
+        // set the dataController to the delegate data controller
         travelMapViewController.dataController = delegate.dataController
-        self.window!.rootViewController = travelMapViewController
 
         // Make this scene's window be visible.
         self.window!.makeKeyAndVisible()
