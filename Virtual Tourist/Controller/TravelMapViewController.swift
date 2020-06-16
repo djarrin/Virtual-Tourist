@@ -37,19 +37,11 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         setUpFetchedResultsController()
-        
+        setMapView()
         loadPins()
         
-        let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleTap))
-        tapGesture.delegate = self
-        mapView.addGestureRecognizer(tapGesture)
-
-        mapView.delegate = self
-        
-        setMapView()
-                
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,8 +69,6 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
                 let annotation = TravelAnnotation()
                 annotation.coordinate = cordinate
                 annotation.pin = dictionary
-//                annotation.title = "\(firstName) \(lastName)"
-//                annotation.subtitle = mediaURL
                 
                 annotations.append(annotation)
             }
@@ -88,22 +78,30 @@ class TravelMapViewController: UIViewController, UIGestureRecognizerDelegate, NS
     }
     
     func setMapView(){
+        mapView.delegate = self
         let centerCoordinate = CLLocationCoordinate2D(latitude: UserDefaults.standard.double(forKey: "mapLatitude"), longitude: UserDefaults.standard.double(forKey: "mapLongitude"))
         let latitudeDelta = UserDefaults.standard.double(forKey: "mapLatitudeDelta")
         let longitudeDelta = UserDefaults.standard.double(forKey: "mapLongitudeDelta")
         let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
         let region = MKCoordinateRegion( center: centerCoordinate, span: span)
         mapView.setRegion(region, animated: true)
+        
+        let tapGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleTap))
+        tapGesture.delegate = self
+        mapView.addGestureRecognizer(tapGesture)
     }
     
     @objc func handleTap(gesture: UILongPressGestureRecognizer) {
-        let location = gesture.location(in: mapView)
-        let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        let pin = savePin(coordinate: coordinate)
-        let annotation = TravelAnnotation()
-        annotation.coordinate = coordinate
-        annotation.pin = pin
-        mapView.addAnnotation(annotation)
+        if gesture.state == UIGestureRecognizer.State.began {
+            let location = gesture.location(in: mapView)
+            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+            let pin = savePin(coordinate: coordinate)
+            let annotation = TravelAnnotation()
+            annotation.coordinate = coordinate
+            annotation.pin = pin
+            mapView.addAnnotation(annotation)
+            mapView.selectAnnotation(annotation, animated: true)
+        }
     }
     
     func savePin(coordinate: CLLocationCoordinate2D) -> Pin {
@@ -151,9 +149,13 @@ extension TravelMapViewController:MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        //need this here so I can select the same pin when I push back button
+        mapView.deselectAnnotation(view.annotation, animated: true)
+        
         let annotation = view.annotation as? TravelAnnotation
         let PhotoAlbumViewController = self.storyboard!.instantiateViewController(withIdentifier: "PhotoAlbumViewController") as! PhotoAlbumViewController
         PhotoAlbumViewController.pin = annotation?.pin
+        PhotoAlbumViewController.dataController = dataController
         self.navigationController!.pushViewController(PhotoAlbumViewController, animated: true)
     }
 }

@@ -9,12 +9,13 @@
 import Foundation
 
 struct FlickerResponse: Codable {
-    let status: Int
-    let error: String
+    let stat: String
+    let code: Int?
+    let message: String?
 }
 
 extension FlickerResponse: LocalizedError {
     var errorDescription: String? {
-        return error
+        return message
     }
 }

@@ -8,18 +8,105 @@
 
 import UIKit
 import MapKit
+import CoreData
 
-class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
+class PhotoAlbumViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, MKMapViewDelegate, NSFetchedResultsControllerDelegate {
+    
+    var dataController:DataController!
+    
+    var fetchedPhotosController:NSFetchedResultsController<Photo>!
     
     var pin: Pin!
+    var page: Int = 0
+    var availablePages: Int?
+    lazy var photos = pin.photos!.allObjects as! [Photo]
+    
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var NewCollectionButton: UIBarButtonItem!
+    @IBOutlet weak var NoPhotosWarning: UILabel!
+    
+    @IBOutlet weak var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NoPhotosWarning.isHidden = true
+        setUpCollectionView()
         setStaticMapView()
+        if(pin.photos!.count == 0) {
+            fetchNewCollection()
+        }
     }
     
-    func setStaticMapView(){
+    @IBAction func fetchNewCollection() {
+        page += 1
+        pageLoading(loading: true)
+        FlickerClient.photoSearch(latitude: pin.latitude, longitude: pin.longitude, page: page, completion: photoSearchResponse(response:error:))
+    }
+    
+    func reloadPhotos(){
+        photos = pin.photos!.allObjects as! [Photo]
+        collectionView!.reloadData()
+    }
+    
+    func photoSearchResponse(response: FlickerPhotoSearchResponse?, error: Error?) -> Void {
+        if let response = response {
+            //Need to delete old photos
+            pin.photos = []
+            availablePages = response.photos.pages
+            if response.photos.photo.count > 0 {
+                NoPhotosWarning.isHidden = true
+            } else {
+                NoPhotosWarning.isHidden = false
+            }
+            var completionArray = [Bool]()
+            for image in response.photos.photo {
+                let photosTotal = response.photos.photo.count
+                // A little too much indentation here but I needed access to the image object
+                // and this seemed like the least disruptive path
+                FlickerClient.getSource(photoID: image.id) { (response, error) in
+                    if let response = response {
+                        self.NoPhotosWarning.isHidden = true
+                        if let lastPhoto = response.sizes.size.first {
+                            let newPhoto = Photo(context: self.dataController.viewContext)
+                            newPhoto.id = image.id
+                            newPhoto.source = URL(string: lastPhoto.source)!
+                            self.pin.addToPhotos(newPhoto)
+                            try? self.dataController.viewContext.save()
+                            self.reloadPhotos()
+                            completionArray.append(true)
+                            if(completionArray.count >= photosTotal) {
+                                self.pageLoading(loading: false)
+                            }
+                        } 
+                    } else {
+                        // error, perhaps display no photos language
+                        self.NoPhotosWarning.isHidden = false
+                    }
+                }
+            }
+        } else {
+            // error, perhaps display no photos language
+            self.NoPhotosWarning.isHidden = false
+            pageLoading(loading: false)
+        }
+        
+    }
+    
+    
+    func pageLoading(loading: Bool) {
+        NewCollectionButton.isEnabled = !loading
+    }
+    
+    func setUpCollectionView() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        collectionView!.reloadData()
+    }
+    
+    
+    
+    func setStaticMapView() {
         mapView.delegate = self
         
         let annotation = MKPointAnnotation()
